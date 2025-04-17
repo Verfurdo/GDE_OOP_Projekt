@@ -6,6 +6,18 @@ class Jarat:
         self.jaratszam = jaratszam
         self.celallomas = celallomas
         self.jegyar = jegyar
+        self.orszag = self.get_orszag(celallomas)
+
+    def get_orszag(self, varos):
+        orszagok = {
+            "Debrecen": "Magyarország",
+            "Szeged": "Magyarország",
+            "London": "Anglia",
+            "New York": "USA",
+            "Tokió": "Japán"
+        }
+        return orszagok.get(varos, "Ismeretlen")
+
 
 class Belfoldi(Jarat):
     def __init__(self, jaratszam, celallomas):
