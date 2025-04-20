@@ -1,7 +1,9 @@
 # Repülőjegy Foglalási Rendszer
 
-# Alaposztály: Jarat
-class Jarat:
+from abc import ABC, abstractmethod
+
+# Absztrakt osztály: Jarat
+class Jarat(ABC):
     def __init__(self, jaratszam, celallomas, jegyar):
         self.jaratszam = jaratszam
         self.celallomas = celallomas
@@ -18,14 +20,24 @@ class Jarat:
         }
         return orszagok.get(varos, "Ismeretlen")
 
+    @abstractmethod
+    def jarat_tipus(self):
+        pass
 
+# Származtatott osztályok
 class Belfoldi(Jarat):
     def __init__(self, jaratszam, celallomas):
         super().__init__(jaratszam, celallomas, 15000)
 
+    def jarat_tipus(self):
+        return "Belföldi járat"
+
 class Nemzetkozi(Jarat):
     def __init__(self, jaratszam, celallomas, alap_ar):
         super().__init__(jaratszam, celallomas, alap_ar)
+
+    def jarat_tipus(self):
+        return "Nemzetközi járat"
 
 class Europa(Nemzetkozi):
     def __init__(self, jaratszam, celallomas):
@@ -38,39 +50,9 @@ class Amerika(Nemzetkozi):
 class Azsia(Nemzetkozi):
     def __init__(self, jaratszam, celallomas):
         super().__init__(jaratszam, celallomas, 95000)
-        
-while True:
-    print("\n--- AERO-GDE Repülőjegy Foglalási Rendszer ---")
-    print("1. Új járat hozzáadása")
-    print("2. Járatok listázása")
-    print("3. Kilépés")
 
-    valasztas = input("Választás (1/2/3): ")
+jarat1 = Belfoldi("B123", "Debrecen")
+print(jarat1.jarat_tipus())  # -> Belföldi járat
 
-    if valasztas == "1":
-        jaratszam = input("Járatszám: ").strip().upper()
-        cel = input("Célállomás: ").strip().title()
-        print("Típus (1 = Belföldi, 2 = Európa, 3 = Amerika, 4 = Ázsia):")
-        tipus = input("Típus választás: ")
-        if tipus == "1":
-            lt.add_jarat(Belfoldi(jaratszam, cel))
-        elif tipus == "2":
-            lt.add_jarat(Europa(jaratszam, cel))
-        elif tipus == "3":
-            lt.add_jarat(Amerika(jaratszam, cel))
-        elif tipus == "4":
-            lt.add_jarat(Azsia(jaratszam, cel))
-        else:
-            print("Ismeretlen típus.")
-    elif valasztas == "2":
-        if not lt.jaratok:
-            print("Nincs elérhető járat.")
-        else:
-            print("\nElérhető járatok:")
-            for j in lt.jaratok:
-                print(f"{j.jaratszam} -> {j.celallomas}, {j.jegyar} Ft")
-    elif valasztas == "3":
-        print("Kilépés...")
-        break
-    else:
-        print("Hibás választás!")
+jarat2 = Europa("N123", "London")
+print(jarat2.jarat_tipus())  # -> Nemzetközi járat
