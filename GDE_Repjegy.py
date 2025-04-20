@@ -74,6 +74,11 @@ class LegiTarsasag:
             if j.jaratszam == jaratszam:
                 self.foglalasok.append(JegyFoglalas(j, datum, felhasznalo))
                 return
+            
+    def elerheto_jaratok(self, datum):
+        foglaltak = [f.jarat.jaratszam for f in self.foglalasok if f.datum.date() == datum.date()]
+        return [j for j in self.jaratok if j.jaratszam not in foglaltak]
+
 
     def list_foglalasok(self):
         print(f"\nFoglalások – {self.nev}")
@@ -114,7 +119,7 @@ while True:
     print("=" * szelesseg)
     print(f"{'GDE-Tours':^{szelesseg}}")
     print(f"{'Repülőjegy Foglalási Rendszer':^{szelesseg}}")
-    print(f"{'v1.1':^{szelesseg}}")
+    print(f"{'v1.2':^{szelesseg}}")
     print("=" * szelesseg)
     print("\nVálassz műveletet:")
     print("1. Jegy Foglalása")
@@ -129,10 +134,9 @@ while True:
             nev = input("Add meg a neved: ").strip()
             if nev:
                 break
-            else:
-                print("A név nem lehet üres!\n")
+            print("A név nem lehet üres!\n")
 
-        # Dátum bekérés 
+        #  Dátum bekérés
         while True:
             datum_str = input("Add meg a dátumot (ÉÉÉÉ.HH.NN): ")
             try:
@@ -140,12 +144,13 @@ while True:
                 if datum.date() < datetime.now().date():
                     print("Hibás dátum! Csak mai vagy jövőbeni dátum lehet.\n")
                 else:
-                    break  
+                    break
             except ValueError:
-                print("Hibás dátum formátum! Használj ÉÉÉÉ.HH.NN formátumot.\n")
+                print("Hibás dátum formátum! Pl. 2025.06.10\n")
 
-        # Elérhető járatok kigyűjtése
-        jaratok = lt.jaratok  
+        # Elérhető járatok lekérdezése
+        jaratok = lt.elerheto_jaratok(datum)
+
         if not jaratok:
             print("Nincs elérhető járat ezen a napon.")
         else:
@@ -153,7 +158,7 @@ while True:
             for i, j in enumerate(jaratok, 1):
                 print(f"{i}. {j.jaratszam} -> {j.celallomas} ({j.jarat_tipus()}), Ár: {j.jegyar} Ft")
 
-            # Járat kiválasztása
+            # Járatválasztás
             try:
                 val = int(input("Válassz járatot (sorszám): "))
                 if 1 <= val <= len(jaratok):
