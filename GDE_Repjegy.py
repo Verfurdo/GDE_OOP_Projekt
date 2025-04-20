@@ -76,13 +76,21 @@ class LegiTarsasag:
                 return
 
     def list_foglalasok(self):
-        print(f"\nFoglalások listája – {self.nev}")
+        print(f"\nJelenlegi foglalások – {self.nev}")
         if not self.foglalasok:
             print("Nincsenek foglalások.")
+            return
+
+        print("-" * 65)
+        print(f"{'Név':<20} | {'Járat':<6} | {'Dátum':^12} | {'Ár':^10}")
+        print("-" * 65)
         for f in self.foglalasok:
-            print(f"Járat: {f.jarat.jaratszam}, Cél: {f.jarat.celallomas} ({f.jarat.orszag}), "
-                f"Dátum: {f.datum.strftime('%Y.%m.%d')}, Ár: {f.jarat.jegyar} Ft, "
-                f"Név: {f.felhasznalo.title()}")
+            nev = f.felhasznalo.title()
+            jarat = f.jarat.jaratszam
+            datum = f.datum.strftime('%Y-%m-%d')
+            ar = f"{f.jarat.jegyar} Ft"
+            print(f"{nev:<20} | {jarat:<6} | {datum:<12} | {ar:>10}")
+        print("-" * 65)
 
 # Előre felvitt adatok
 lt = LegiTarsasag("GDE-TOURS")
@@ -102,6 +110,12 @@ lt.foglalas("N401", datetime(2024, 6, 15), "Varga Anna")
 
 # Felhasználói interfész
 while True:
+    szelesseg = 33
+    print("=" * szelesseg)
+    print(f"{'GDE-Tours':^{szelesseg}}")
+    print(f"{'Repülőjegy Foglalási Rendszer':^{szelesseg}}")
+    print(f"{'v1.0':^{szelesseg}}")
+    print("=" * szelesseg)
     print("\nVálassz műveletet:")
     print("1. Foglalások listázása")
     print("2. Kilépés")
@@ -109,6 +123,7 @@ while True:
 
     if valasztas == "1":
         lt.list_foglalasok()
+        input("\n A folytatáshoz nyomd meg az ENTER gombot...")
     elif valasztas == "2":
         print("Kilépés a programból...")
         break
