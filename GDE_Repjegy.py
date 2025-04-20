@@ -76,7 +76,7 @@ class LegiTarsasag:
                 return
 
     def list_foglalasok(self):
-        print(f"\nJelenlegi foglalások – {self.nev}")
+        print(f"\nFoglalások – {self.nev}")
         if not self.foglalasok:
             print("Nincsenek foglalások.")
             return
@@ -101,12 +101,12 @@ lt.add_jarat(Europa("N201", "London"))
 lt.add_jarat(Amerika("N301", "New York"))
 lt.add_jarat(Azsia("N401", "Tokió"))
 
-lt.foglalas("B101", datetime(2024, 6, 5), "Kiss József")
-lt.foglalas("B101", datetime(2024, 6, 7), "Nagy Éva")
+lt.foglalas("B101", datetime(2025, 6, 5), "Kiss József")
+lt.foglalas("B101", datetime(2025, 6, 7), "Nagy Éva")
 lt.foglalas("N201", datetime(2025, 5, 21), "Szabó László")
-lt.foglalas("N201", datetime(2024, 6, 11), "Tóth Zsófia")
+lt.foglalas("N201", datetime(2025, 6, 11), "Tóth Zsófia")
 lt.foglalas("N401", datetime(2025, 5, 2), "Kovács Péter")
-lt.foglalas("N401", datetime(2024, 6, 15), "Varga Anna")
+lt.foglalas("N401", datetime(2025, 6, 15), "Varga Anna")
 
 # Felhasználói interfész
 while True:
@@ -114,18 +114,64 @@ while True:
     print("=" * szelesseg)
     print(f"{'GDE-Tours':^{szelesseg}}")
     print(f"{'Repülőjegy Foglalási Rendszer':^{szelesseg}}")
-    print(f"{'v1.0':^{szelesseg}}")
+    print(f"{'v1.1':^{szelesseg}}")
     print("=" * szelesseg)
     print("\nVálassz műveletet:")
-    print("1. Foglalások listázása")
-    print("2. Kilépés")
-    valasztas = input("Művelet (1-2): ")
+    print("1. Jegy Foglalása")
+    print("2. Foglalások listázása")
+    print("3. Kilépés")
+    valasztas = input("Művelet (1-3): ")
+
 
     if valasztas == "1":
+        # Felhasználó nevének bekérése
+        while True:
+            nev = input("Add meg a neved: ").strip()
+            if nev:
+                break
+            else:
+                print("A név nem lehet üres!\n")
+
+        # Dátum bekérés 
+        while True:
+            datum_str = input("Add meg a dátumot (ÉÉÉÉ.HH.NN): ")
+            try:
+                datum = datetime.strptime(datum_str, "%Y.%m.%d")
+                if datum.date() < datetime.now().date():
+                    print("Hibás dátum! Csak mai vagy jövőbeni dátum lehet.\n")
+                else:
+                    break  
+            except ValueError:
+                print("Hibás dátum formátum! Használj ÉÉÉÉ.HH.NN formátumot.\n")
+
+        # Elérhető járatok kigyűjtése
+        jaratok = lt.jaratok  
+        if not jaratok:
+            print("Nincs elérhető járat ezen a napon.")
+        else:
+            print("\nElérhető járatok:")
+            for i, j in enumerate(jaratok, 1):
+                print(f"{i}. {j.jaratszam} -> {j.celallomas} ({j.jarat_tipus()}), Ár: {j.jegyar} Ft")
+
+            # Járat kiválasztása
+            try:
+                val = int(input("Válassz járatot (sorszám): "))
+                if 1 <= val <= len(jaratok):
+                    kivalasztott_jarat = jaratok[val - 1]
+                    lt.foglalas(kivalasztott_jarat.jaratszam, datum, nev)
+                    print(f"\nSikeres foglalás, {nev.title()}! Ár: {kivalasztott_jarat.jegyar} Ft")
+                else:
+                    print("Hibás sorszám!")
+            except ValueError:
+                print("Hibás bevitel! Szám 1-5.")
+
+
+
+    elif valasztas == "2":
         lt.list_foglalasok()
         input("\n A folytatáshoz nyomd meg az ENTER gombot...")
-    elif valasztas == "2":
+    elif valasztas == "3":
         print("Kilépés a programból...")
         break
     else:
-        print("Csak 1 vagy 2!")
+        print("Csak 1-3!")
