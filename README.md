@@ -1,4 +1,3 @@
-# GDE OOP PROJEKT
 # GDE-Tours – Repülőjegy Foglalási Rendszer
 
 Egy konzolos repülőjegy foglalási rendszer Pythonban. A program lehetőséget nyújt belföldi és nemzetközi járatok kezelésére, valamint jegyfoglalásra, lemondásra és foglalások listázására.
@@ -30,12 +29,6 @@ Python 3.7 vagy újabb ajánlott.
 	python GDE_Repjegy.py
 
 ## Használat
-
-Válassz műveletet:
-- 1. Jegy Foglalása
-- 2. Foglalas Lemondása
-- 3. Foglalások Listázása
-- 4. Kilépés
 
 Indítás után egy konzolos menü jelenik meg, ahol a következő opciók közül választhatsz:
 -	1 – Jegy Foglalása: Add meg a neved, a dátumot, majd válassz egy elérhető járatot.
