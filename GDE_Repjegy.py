@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from datetime import datetime
+import os
 
 # Absztrakt osztály: Jarat
 class Jarat(ABC):
@@ -102,6 +103,9 @@ class LegiTarsasag:
             ar = f"{f.jarat.jegyar} Ft"
             print(f"{nev:<20} | {jarat:<6} | {datum:<12} | {ar:>10}")
         print("-" * 65)
+        
+def torol_konzol():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 # Előre felvitt adatok
 lt = LegiTarsasag("GDE-TOURS")
@@ -121,6 +125,7 @@ lt.foglalas("N401", datetime(2025, 6, 15), "Varga Anna")
 
 # Felhasználói interfész
 while True:
+    torol_konzol()
     szelesseg = 33
     print("=" * szelesseg)
     print(f"{'GDE-Tours':^{szelesseg}}")
@@ -166,18 +171,21 @@ while True:
                 print(f"{i}. {j.jaratszam} -> {j.celallomas} ({j.jarat_tipus()}), Ár: {j.jegyar} Ft")
 
             # Járatválasztás
-            try:
-                val = int(input("Válassz járatot (sorszám): "))
-                if 1 <= val <= len(jaratok):
-                    kivalasztott_jarat = jaratok[val - 1]
-                    lt.foglalas(kivalasztott_jarat.jaratszam, datum, nev)
-                    print(f"\nSikeres foglalás, {nev.title()}! Ár: {kivalasztott_jarat.jegyar} Ft")
-                    input("\n A folytatáshoz nyomd meg az ENTER gombot...")
-
-                else:
-                    print("Hibás sorszám!")
-            except ValueError:
-                print("Hibás bevitel! Szám 1-5.")
+            while True:
+                try:
+                    val = int(input("Válassz járatot (sorszám): "))
+                    if 1 <= val <= len(jaratok):
+                        kivalasztott_jarat = jaratok[val - 1]
+                        lt.foglalas(kivalasztott_jarat.jaratszam, datum, nev)
+                        print(f"\nSikeres foglalás, {nev.title()}! Ár: {kivalasztott_jarat.jegyar} Ft")
+                        input("\nA folytatáshoz nyomd meg az ENTER gombot...")
+                        break
+                    else:
+                        print("Hibás sorszám! Próbáld újra.\n")
+                        input("\nA folytatáshoz nyomd meg az ENTER gombot...")
+                except ValueError:
+                    print("Hibás bevitel! Csak sorszámot írj be.\n")
+                    input("\nA folytatáshoz nyomd meg az ENTER gombot...")
 
     elif valasztas == "2":
         while True:
