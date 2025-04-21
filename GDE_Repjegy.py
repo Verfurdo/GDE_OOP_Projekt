@@ -130,7 +130,7 @@ while True:
     print("=" * szelesseg)
     print(f"{'GDE-Tours':^{szelesseg}}")
     print(f"{'Repülőjegy Foglalási Rendszer':^{szelesseg}}")
-    print(f"{'v1.2':^{szelesseg}}")
+    print(f"{'v1.5':^{szelesseg}}")
     print("=" * szelesseg)
     print("\nVálassz műveletet:")
     print("1. Jegy Foglalása")
@@ -203,7 +203,6 @@ while True:
         for idx, f in enumerate(sajat_foglalasok, 1):
             print(f"{idx}. Járat: {f.jarat.jaratszam}, Cél: {f.jarat.celallomas}, Dátum: {f.datum.strftime('%Y.%m.%d')}, Ár: {f.jarat.jegyar} Ft")
 
-        val = input("Add meg a lemondandó foglalás sorszámát: ")
         while True:
             val = input("Add meg a lemondandó foglalás sorszámát: ")
             if val.isdigit() and (1 <= int(val) <= len(sajat_foglalasok)):
