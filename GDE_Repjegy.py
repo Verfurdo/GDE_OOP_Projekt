@@ -79,7 +79,13 @@ class LegiTarsasag:
         foglaltak = [f.jarat.jaratszam for f in self.foglalasok if f.datum.date() == datum.date()]
         return [j for j in self.jaratok if j.jaratszam not in foglaltak]
 
-
+    def lemondas(self, jaratszam, datum, felhasznalo):
+        for f in self.foglalasok:
+            if f.jarat.jaratszam == jaratszam and f.datum == datum and f.felhasznalo == felhasznalo:
+                self.foglalasok.remove(f)
+                return True
+        return False
+    
     def list_foglalasok(self):
         print(f"\nFoglalások – {self.nev}")
         if not self.foglalasok:
@@ -123,9 +129,10 @@ while True:
     print("=" * szelesseg)
     print("\nVálassz műveletet:")
     print("1. Jegy Foglalása")
-    print("2. Foglalások listázása")
-    print("3. Kilépés")
-    valasztas = input("Művelet (1-3): ")
+    print("2. Foglalas Lemondása")
+    print("3. Foglalások Listázása")
+    print("4. Kilépés")
+    valasztas = input("Művelet (1-4): ")
 
 
     if valasztas == "1":
@@ -146,7 +153,7 @@ while True:
                 else:
                     break
             except ValueError:
-                print("Hibás dátum formátum! Pl. 2025.06.10\n")
+                print("Hibás dátum formátum (ÉÉÉÉ.HH.NN)\n")
 
         # Elérhető járatok lekérdezése
         jaratok = lt.elerheto_jaratok(datum)
@@ -165,18 +172,55 @@ while True:
                     kivalasztott_jarat = jaratok[val - 1]
                     lt.foglalas(kivalasztott_jarat.jaratszam, datum, nev)
                     print(f"\nSikeres foglalás, {nev.title()}! Ár: {kivalasztott_jarat.jegyar} Ft")
+                    input("\n A folytatáshoz nyomd meg az ENTER gombot...")
+
                 else:
                     print("Hibás sorszám!")
             except ValueError:
                 print("Hibás bevitel! Szám 1-5.")
 
-
-
     elif valasztas == "2":
+        while True:
+            nev = input("Add meg a neved: ").strip()
+            if nev:
+                break
+            print("A név nem lehet üres!\n")
+            
+        print("A te foglalásaid:")
+        sajat_foglalasok = [f for f in lt.foglalasok if f.felhasznalo == nev]
+        if not sajat_foglalasok:
+            print("Nincs lemondható foglalásod.")
+            input("\n A folytatáshoz nyomd meg az ENTER gombot...")
+            continue
+        for idx, f in enumerate(sajat_foglalasok, 1):
+            print(f"{idx}. Járat: {f.jarat.jaratszam}, Cél: {f.jarat.celallomas}, Dátum: {f.datum.strftime('%Y.%m.%d')}, Ár: {f.jarat.jegyar} Ft")
+
+        val = input("Add meg a lemondandó foglalás sorszámát: ")
+        while True:
+            val = input("Add meg a lemondandó foglalás sorszámát: ")
+            if val.isdigit() and (1 <= int(val) <= len(sajat_foglalasok)):
+                break
+            print("Hibás sorszám! Kérlek, próbáld újra.")
+            
+        kivalasztott = sajat_foglalasok[int(val)-1]
+        jaratszam = kivalasztott.jarat.jaratszam
+        datum = kivalasztott.datum
+        if lt.lemondas(jaratszam, datum, nev):
+                print("Foglalás lemondva valamint a foglalás ára törölve.")
+                input("\n A folytatáshoz nyomd meg az ENTER gombot...")
+
+        else:
+                print("Nincs ilyen foglalás vagy nem a te foglalásod.")
+                input("\n A folytatáshoz nyomd meg az ENTER gombot...")
+
+        
+
+
+    elif valasztas == "3":
         lt.list_foglalasok()
         input("\n A folytatáshoz nyomd meg az ENTER gombot...")
-    elif valasztas == "3":
+    elif valasztas == "4":
         print("Kilépés a programból...")
         break
     else:
-        print("Csak 1-3!")
+        print("Csak 1-4!")
