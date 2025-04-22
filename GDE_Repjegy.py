@@ -106,6 +106,13 @@ class LegiTarsasag:
         
 def torol_konzol():
     os.system('cls' if os.name == 'nt' else 'clear')
+    
+def kozepre(szoveg, szelesseg=60, karakter=" "):
+    return szoveg.center(szelesseg, karakter)
+
+def cian(szoveg):
+    return "\033[36m" + szoveg + "\033[0m"
+
 
 # Előre felvitt adatok
 lt = LegiTarsasag("GDE-TOURS")
@@ -126,18 +133,19 @@ lt.foglalas("N401", datetime(2025, 6, 15), "Varga Anna")
 # Felhasználói interfész
 while True:
     torol_konzol()
-    szelesseg = 33
+    szelesseg = 60
     print("=" * szelesseg)
-    print(f"{'GDE-Tours':^{szelesseg}}")
-    print(f"{'Repülőjegy Foglalási Rendszer':^{szelesseg}}")
-    print(f"{'v1.5':^{szelesseg}}")
+    print(cian(kozepre("GDE-Tours")))
+    print(cian(kozepre("Repülőjegy Foglalási Rendszer")))
+    print(cian(kozepre("v1.6")))
     print("=" * szelesseg)
-    print("\nVálassz műveletet:")
-    print("1. Jegy Foglalása")
-    print("2. Foglalas Lemondása")
-    print("3. Foglalások Listázása")
-    print("4. Kilépés")
-    valasztas = input("Művelet (1-4): ")
+    print("\n" + (cian(kozepre("Válassz műveletet:\n"))))
+    print(cian(kozepre("1. Jegy Foglalása")))
+    print(cian(kozepre("2. Foglalás Lemondása")))
+    print(cian(kozepre("3. Foglalások Listázása")))
+    print(cian(kozepre("4. Kilépés")))
+    print(cian(kozepre("Művelet (1-4):")))
+    valasztas = input("> ")
 
 
     if valasztas == "1":
@@ -182,10 +190,8 @@ while True:
                         break
                     else:
                         print("Hibás sorszám! Próbáld újra.\n")
-                        input("\nA folytatáshoz nyomd meg az ENTER gombot...")
                 except ValueError:
                     print("Hibás bevitel! Csak sorszámot írj be.\n")
-                    input("\nA folytatáshoz nyomd meg az ENTER gombot...")
 
     elif valasztas == "2":
         while True:
@@ -213,7 +219,7 @@ while True:
         jaratszam = kivalasztott.jarat.jaratszam
         datum = kivalasztott.datum
         if lt.lemondas(jaratszam, datum, nev):
-                print("Foglalás lemondva valamint a foglalás ára törölve.")
+                print("Foglalás lemondva.")
                 input("\n A folytatáshoz nyomd meg az ENTER gombot...")
 
         else:
