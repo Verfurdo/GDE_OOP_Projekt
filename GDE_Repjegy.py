@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 import os
+import time
 
 # Absztrakt osztály: Jarat
 class Jarat(ABC):
@@ -113,6 +114,17 @@ def kozepre(szoveg, szelesseg=60, karakter=" "):
 def cian(szoveg):
     return "\033[36m" + szoveg + "\033[0m"
 
+def bejelentkezes():
+    print("=" * 50)
+    print("|{:^48}|".format("GDE-Tours"))
+    print("|{:^48}|".format("Bejelentkezési Felület"))
+    print("=" * 50)
+    
+    nev = input("Add meg a neved a bejelentkezéshez: ")
+    print("\nÜdvözöllek {}! Sikeres bejelentkezés...".format(nev))
+    time.sleep(2)
+    return nev
+
 
 # Előre felvitt adatok
 lt = LegiTarsasag("GDE-TOURS")
@@ -133,7 +145,7 @@ lt.foglalas("N401", datetime(2025, 6, 15), "Varga Anna")
 # Felhasználói interfész
 while True:
     # Felhasználó nevének bekérése
-    nev = input("Add meg a neved a bejelentkezéshez: ").strip()
+    nev = bejelentkezes()
     if nev:
         break
     print("A név nem lehet üres!\n")
@@ -144,7 +156,7 @@ while True:
     print("=" * szelesseg)
     print(cian(kozepre("GDE-Tours")))
     print(cian(kozepre("Repülőjegy Foglalási Rendszer")))
-    print(cian(kozepre("v1.8")))
+    print(cian(kozepre("v1.9")))
     print("=" * szelesseg)
     print(cian(kozepre(f"Bejelentkezve: {nev}")))
     print("=" * szelesseg)
