@@ -132,30 +132,32 @@ lt.foglalas("N401", datetime(2025, 6, 15), "Varga Anna")
 
 # Felhasználói interfész
 while True:
+    # Felhasználó nevének bekérése
+    nev = input("Add meg a neved a bejelentkezéshez: ").strip()
+    if nev:
+        break
+    print("A név nem lehet üres!\n")
+    
+while True:
     torol_konzol()
     szelesseg = 60
     print("=" * szelesseg)
     print(cian(kozepre("GDE-Tours")))
     print(cian(kozepre("Repülőjegy Foglalási Rendszer")))
-    print(cian(kozepre("v1.6")))
+    print(cian(kozepre("v1.7")))
     print("=" * szelesseg)
-    print("\n" + (cian(kozepre("Válassz műveletet:\n"))))
+    print(cian(kozepre(f"Bejelentkezve: {nev}")))
+    print("=" * szelesseg)
+    print("\n" + (cian(kozepre("Menüpontok:\n"))))
     print(cian(kozepre("1. Jegy Foglalása")))
     print(cian(kozepre("2. Foglalás Lemondása")))
     print(cian(kozepre("3. Foglalások Listázása")))
     print(cian(kozepre("4. Kilépés")))
-    print(cian(kozepre("Művelet (1-4):")))
-    valasztas = input("> ")
+    print("=" * szelesseg)
+    valasztas = input(" Válassz a menüpontok közül (1-4): ")
 
 
     if valasztas == "1":
-        # Felhasználó nevének bekérése
-        while True:
-            nev = input("Add meg a neved: ").strip()
-            if nev:
-                break
-            print("A név nem lehet üres!\n")
-
         #  Dátum bekérés
         while True:
             datum_str = input("Add meg a dátumot (ÉÉÉÉ.HH.NN): ")
@@ -194,12 +196,7 @@ while True:
                     print("Hibás bevitel! Csak sorszámot írj be.\n")
 
     elif valasztas == "2":
-        while True:
-            nev = input("Add meg a neved: ").strip()
-            if nev:
-                break
-            print("A név nem lehet üres!\n")
-            
+                    
         print("A te foglalásaid:")
         sajat_foglalasok = [f for f in lt.foglalasok if f.felhasznalo == nev]
         if not sajat_foglalasok:
