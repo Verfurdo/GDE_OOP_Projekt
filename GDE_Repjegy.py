@@ -144,7 +144,7 @@ while True:
     print("=" * szelesseg)
     print(cian(kozepre("GDE-Tours")))
     print(cian(kozepre("Repülőjegy Foglalási Rendszer")))
-    print(cian(kozepre("v1.7")))
+    print(cian(kozepre("v1.8")))
     print("=" * szelesseg)
     print(cian(kozepre(f"Bejelentkezve: {nev}")))
     print("=" * szelesseg)
@@ -158,71 +158,79 @@ while True:
 
 
     if valasztas == "1":
-        #  Dátum bekérés
         while True:
-            datum_str = input("Add meg a dátumot (ÉÉÉÉ.HH.NN): ")
-            try:
-                datum = datetime.strptime(datum_str, "%Y.%m.%d")
-                if datum.date() < datetime.now().date():
-                    print("Hibás dátum! Csak mai vagy jövőbeni dátum lehet.\n")
-                else:
-                    break
-            except ValueError:
-                print("Hibás dátum formátum (ÉÉÉÉ.HH.NN)\n")
-
-        # Elérhető járatok lekérdezése
-        jaratok = lt.elerheto_jaratok(datum)
-
-        if not jaratok:
-            print("Nincs elérhető járat ezen a napon.")
-        else:
-            print("\nElérhető járatok:")
-            for i, j in enumerate(jaratok, 1):
-                print(f"{i}. {j.jaratszam} -> {j.celallomas} ({j.jarat_tipus()}), Ár: {j.jegyar} Ft")
-
-            # Járatválasztás
+        #  Dátum bekérés
             while True:
+                datum_str = input("Add meg a dátumot (ÉÉÉÉ.HH.NN): ")
                 try:
-                    val = int(input("Válassz járatot (sorszám): "))
-                    if 1 <= val <= len(jaratok):
-                        kivalasztott_jarat = jaratok[val - 1]
-                        lt.foglalas(kivalasztott_jarat.jaratszam, datum, nev)
-                        print(f"\nSikeres foglalás, {nev.title()}! Ár: {kivalasztott_jarat.jegyar} Ft")
-                        input("\nA folytatáshoz nyomd meg az ENTER gombot...")
-                        break
+                    datum = datetime.strptime(datum_str, "%Y.%m.%d")
+                    if datum.date() < datetime.now().date():
+                        print("Hibás dátum! Csak mai vagy jövőbeni dátum lehet.\n")
                     else:
-                        print("Hibás sorszám! Próbáld újra.\n")
+                        break
                 except ValueError:
-                    print("Hibás bevitel! Csak sorszámot írj be.\n")
+                    print("Hibás dátum formátum (ÉÉÉÉ.HH.NN)\n")
+
+            # Elérhető járatok lekérdezése
+            jaratok = lt.elerheto_jaratok(datum)
+
+            if not jaratok:
+                print("Nincs elérhető járat ezen a napon.")
+            else:
+                print("\nElérhető járatok:")
+                for i, j in enumerate(jaratok, 1):
+                    print(f"{i}. {j.jaratszam} -> {j.celallomas} ({j.jarat_tipus()}), Ár: {j.jegyar} Ft")
+
+                # Járatválasztás
+                while True:
+                    try:
+                        val = int(input("Válassz járatot (sorszám): "))
+                        if 1 <= val <= len(jaratok):
+                            kivalasztott_jarat = jaratok[val - 1]
+                            lt.foglalas(kivalasztott_jarat.jaratszam, datum, nev)
+                            print(f"\nSikeres foglalás, {nev.title()}! Ár: {kivalasztott_jarat.jegyar} Ft")
+                            break
+                        else:
+                            print("Hibás sorszám! Próbáld újra.\n")
+                    except ValueError:
+                        print("Hibás bevitel! Csak sorszámot írj be.\n")
+            input("\nA folytatáshoz nyomd meg az ENTER gombot...")
+
+            ujra = input("Szeretnél még foglalást? (i/n): ").strip().lower()
+            if ujra != "i":
+                break
 
     elif valasztas == "2":
-                    
-        print("A te foglalásaid:")
-        sajat_foglalasok = [f for f in lt.foglalasok if f.felhasznalo == nev]
-        if not sajat_foglalasok:
-            print("Nincs lemondható foglalásod.")
-            input("\n A folytatáshoz nyomd meg az ENTER gombot...")
-            continue
-        for idx, f in enumerate(sajat_foglalasok, 1):
-            print(f"{idx}. Járat: {f.jarat.jaratszam}, Cél: {f.jarat.celallomas}, Dátum: {f.datum.strftime('%Y.%m.%d')}, Ár: {f.jarat.jegyar} Ft")
-
-        while True:
-            val = input("Add meg a lemondandó foglalás sorszámát: ")
-            if val.isdigit() and (1 <= int(val) <= len(sajat_foglalasok)):
+        while True:            
+            print("A te foglalásaid:")
+            sajat_foglalasok = [f for f in lt.foglalasok if f.felhasznalo == nev]
+            if not sajat_foglalasok:
+                print("Nincs lemondható foglalásod.")
+                input("\n A folytatáshoz nyomd meg az ENTER gombot...")
                 break
-            print("Hibás sorszám! Kérlek, próbáld újra.")
-            
-        kivalasztott = sajat_foglalasok[int(val)-1]
-        jaratszam = kivalasztott.jarat.jaratszam
-        datum = kivalasztott.datum
-        if lt.lemondas(jaratszam, datum, nev):
-                print("Foglalás lemondva.")
-                input("\n A folytatáshoz nyomd meg az ENTER gombot...")
+            for idx, f in enumerate(sajat_foglalasok, 1):
+                print(f"{idx}. Járat: {f.jarat.jaratszam}, Cél: {f.jarat.celallomas}, Dátum: {f.datum.strftime('%Y.%m.%d')}, Ár: {f.jarat.jegyar} Ft")
 
-        else:
-                print("Nincs ilyen foglalás vagy nem a te foglalásod.")
-                input("\n A folytatáshoz nyomd meg az ENTER gombot...")
+            while True:
+                val = input("Add meg a lemondandó foglalás sorszámát: ")
+                if val.isdigit() and (1 <= int(val) <= len(sajat_foglalasok)):
+                    break
+                print("Hibás sorszám! Kérlek, próbáld újra.")
+                
+            kivalasztott = sajat_foglalasok[int(val)-1]
+            jaratszam = kivalasztott.jarat.jaratszam
+            datum = kivalasztott.datum
+            if lt.lemondas(jaratszam, datum, nev):
+                    print("Foglalás lemondva.")
+                    input("\n A folytatáshoz nyomd meg az ENTER gombot...")
 
+            else:
+                    print("Nincs ilyen foglalás vagy nem a te foglalásod.")
+                    input("\n A folytatáshoz nyomd meg az ENTER gombot...")
+                    
+            ujra = input("Szeretnél másik foglalást is lemondani? (i/n): ").lower()
+            if ujra != "i":
+                break
         
 
 
