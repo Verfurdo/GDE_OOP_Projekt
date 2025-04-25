@@ -120,7 +120,12 @@ def bejelentkezes():
     print("|{:^48}|".format("Bejelentkezési Felület"))
     print("=" * 50)
     
-    nev = input("Add meg a neved a bejelentkezéshez: ")
+    while True:
+        nev = input("Add meg a neved a bejelentkezéshez: ")
+        if nev.strip():
+            break
+        print("A név nem lehet üres!\n")
+        
     print("\nÜdvözöllek {}! Sikeres bejelentkezés...".format(nev))
     time.sleep(2)
     return nev
@@ -143,20 +148,18 @@ lt.foglalas("N401", datetime(2025, 5, 2), "Kovács Péter")
 lt.foglalas("N401", datetime(2025, 6, 15), "Varga Anna")
 
 # Felhasználói interfész
-while True:
-    # Felhasználó nevének bekérése
-    nev = bejelentkezes()
-    if nev:
-        break
-    print("A név nem lehet üres!\n")
-    
+
+# Felhasználó nevének bekérése
+nev = bejelentkezes()
+
+# Menüpontok        
 while True:
     torol_konzol()
     szelesseg = 60
     print("=" * szelesseg)
     print(cian(kozepre("GDE-Tours")))
     print(cian(kozepre("Repülőjegy Foglalási Rendszer")))
-    print(cian(kozepre("v1.9")))
+    print(cian(kozepre("v2.0")))
     print("=" * szelesseg)
     print(cian(kozepre(f"Bejelentkezve: {nev}")))
     print("=" * szelesseg)
@@ -244,11 +247,10 @@ while True:
             if ujra != "i":
                 break
         
-
-
     elif valasztas == "3":
         lt.list_foglalasok()
         input("\n A folytatáshoz nyomd meg az ENTER gombot...")
+        
     elif valasztas == "4":
         print("Kilépés a programból...")
         break
